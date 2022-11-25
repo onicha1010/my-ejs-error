@@ -1,4 +1,4 @@
-const e = require('express'); // คืออะไรอ่ะ??
+// const e = require('express'); // คืออะไรอ่ะ??
 let express = require('express');
 let router = express.Router();
 let dbCon = require('../lib/db');
@@ -147,6 +147,35 @@ router.get('/delete/(:id)', (req, res, next) => {
 
 
 //display detail page
+// router.get('/detail/:id', (req,res, next) => {
+//     let id = req.params.id;
+//     dbCon.query('select * from new_healthcare where id = ', (err, rows) => {
+//         if (err) {
+//             req.flash('error', err);
+//             res.render('detail', { data: '' });
+//         } else {
+//             res.render('detail', { data: rows });
+//         }
+//     })
+// })
+
+router.get('/detail/:id', (req, res, next) => {
+    let id = req.params.id;
+    dbCon.query('select * from new_healthcare where id = ' + id, (err, rows, fields) => {
+        if (rows.length <= 0) {
+            req.flash('error', 'News not found with id = ' + id);
+            res.redirect('/new');
+        } else {
+            res.render('new/detail', {
+                title: 'Deatil New',
+                id: rows[0].id,
+                name: rows[0].name,
+                author: rows[0].author,
+                details: rows[0].details,
+            })
+        }
+    })
+})
 
 
 
